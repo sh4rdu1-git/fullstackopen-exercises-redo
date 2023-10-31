@@ -7,9 +7,12 @@ const Button = ({ btnText, clickHandler }) => {
 
 const StatisticsLine = ({ statText, statValue }) => {
   return (
-    <p>
-      {statText} {statValue} {statText == "Positive" && "%"}
-    </p>
+    <tr>
+      <td>{statText}</td>
+      <td>
+        {statValue} {statText == "Positive" && "%"}
+      </td>
+    </tr>
   );
 };
 
@@ -24,21 +27,25 @@ const Statistics = (props) => {
   }
   return (
     <div>
-      <StatisticsLine statText="Good" statValue={props.good} />
-      <StatisticsLine statText="Neutral" statValue={props.neutral} />
-      <StatisticsLine statText="Bad" statValue={props.bad} />
-      <StatisticsLine statText="All" statValue={props.totalFeedbacks} />
-      <StatisticsLine
-        statText="Average"
-        statValue={
-          (1 * props.good + 0 * props.neutral + -1 * props.bad) /
-          props.totalFeedbacks
-        }
-      />
-      <StatisticsLine
-        statText="Positive"
-        statValue={(props.good / props.totalFeedbacks) * 100}
-      />
+      <table>
+        <tbody>
+          <StatisticsLine statText="Good" statValue={props.good} />
+          <StatisticsLine statText="Neutral" statValue={props.neutral} />
+          <StatisticsLine statText="Bad" statValue={props.bad} />
+          <StatisticsLine statText="All" statValue={props.totalFeedbacks} />
+          <StatisticsLine
+            statText="Average"
+            statValue={
+              (1 * props.good + 0 * props.neutral + -1 * props.bad) /
+              props.totalFeedbacks
+            }
+          />
+          <StatisticsLine
+            statText="Positive"
+            statValue={(props.good / props.totalFeedbacks) * 100}
+          />
+        </tbody>
+      </table>
     </div>
   );
 };
