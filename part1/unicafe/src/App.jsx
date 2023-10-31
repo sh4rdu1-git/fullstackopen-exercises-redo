@@ -1,6 +1,16 @@
+/* eslint react/prop-types: 0 */
 import { useState } from "react";
 
 const Statistics = (props) => {
+  // render this if total feedbacks given are zero
+  if (!props.totalFeedbacks) {
+    return (
+      <div>
+        <h1>Statistics</h1>
+        <p>No feedback given</p>
+      </div>
+    );
+  }
   return (
     <div>
       <h1>Statistics</h1>
