@@ -1,29 +1,44 @@
 /* eslint react/prop-types: 0 */
 import { useState } from "react";
 
+const Button = ({ btnText, clickHandler }) => {
+  return <button onClick={clickHandler}>{btnText}</button>;
+};
+
+const StatisticsLine = ({ statText, statValue }) => {
+  return (
+    <p>
+      {statText} {statValue} {statText == "Positive" && "%"}
+    </p>
+  );
+};
+
 const Statistics = (props) => {
   // render this if total feedbacks given are zero
   if (!props.totalFeedbacks) {
     return (
       <div>
-        <h1>Statistics</h1>
         <p>No feedback given</p>
       </div>
     );
   }
   return (
     <div>
-      <h1>Statistics</h1>
-      <p>Good {props.good}</p>
-      <p>Neutral {props.neutral}</p>
-      <p>Bad {props.bad}</p>
-      <p>All {props.totalFeedbacks}</p>
-      <p>
-        Average{" "}
-        {(1 * props.good + 0 * props.neutral + -1 * props.bad) /
-          props.totalFeedbacks}
-      </p>
-      <p>Positive {(props.good / props.totalFeedbacks) * 100}%</p>
+      <StatisticsLine statText="Good" statValue={props.good} />
+      <StatisticsLine statText="Neutral" statValue={props.neutral} />
+      <StatisticsLine statText="Bad" statValue={props.bad} />
+      <StatisticsLine statText="All" statValue={props.totalFeedbacks} />
+      <StatisticsLine
+        statText="Average"
+        statValue={
+          (1 * props.good + 0 * props.neutral + -1 * props.bad) /
+          props.totalFeedbacks
+        }
+      />
+      <StatisticsLine
+        statText="Positive"
+        statValue={(props.good / props.totalFeedbacks) * 100}
+      />
     </div>
   );
 };
@@ -52,10 +67,11 @@ const App = () => {
   return (
     <div>
       <h1>Give feedback</h1>
-      <button onClick={handleGoodClick}>Good</button>
-      <button onClick={handleNeutralClick}>Neutral</button>
-      <button onClick={handleBadClick}>Bad</button>
+      <Button btnText="Good" clickHandler={handleGoodClick} />
+      <Button btnText="Neutral" clickHandler={handleNeutralClick} />
+      <Button btnText="Bad" clickHandler={handleBadClick} />
 
+      <h1>Statistics</h1>
       <Statistics
         good={good}
         neutral={neutral}
