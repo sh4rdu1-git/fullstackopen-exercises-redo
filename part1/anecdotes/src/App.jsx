@@ -13,7 +13,23 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
 
+  const votesArr = new Array(anecdotes.length).fill(0);
+
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(votesArr);
+
+  const addVoteHandler = () => {
+    // we create a copy of votes array by using map method and while doing so we increment
+    // the vote count of the currently selected anecdote. Then this copy array is passed to
+    // the state-changing function
+    const votesCopy = votes.map((voteCount, i) => {
+      if (i == selected) {
+        return voteCount + 1;
+      } else return voteCount;
+    });
+
+    setVotes(votesCopy);
+  };
 
   const nextAnecdoteHandler = () => {
     let randomisedNumber = Math.floor(Math.random() * anecdotes.length);
@@ -23,6 +39,7 @@ const App = () => {
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <button onClick={addVoteHandler}>vote</button>
       <button onClick={nextAnecdoteHandler}>Next anecdote</button>
     </div>
   );
