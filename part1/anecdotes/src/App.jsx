@@ -17,6 +17,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(votesArr);
+  const [maxVotedAnecdote, setMaxVotedAnecdote] = useState(0);
 
   const addVoteHandler = () => {
     // we create a copy of votes array by using map method and while doing so we increment
@@ -27,8 +28,12 @@ const App = () => {
         return voteCount + 1;
       } else return voteCount;
     });
-
     setVotes(votesCopy);
+
+    // setting the max voted anecdote
+    if (votesCopy[selected] > votes[maxVotedAnecdote]) {
+      setMaxVotedAnecdote(selected);
+    }
   };
 
   const nextAnecdoteHandler = () => {
@@ -38,9 +43,14 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <button onClick={addVoteHandler}>vote</button>
       <button onClick={nextAnecdoteHandler}>Next anecdote</button>
+
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[maxVotedAnecdote]}</p>
+      <p>has {votes[maxVotedAnecdote]} votes</p>
     </div>
   );
 };
