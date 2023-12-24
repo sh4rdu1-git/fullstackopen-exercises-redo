@@ -1,7 +1,6 @@
 /* eslint react/prop-types: 0 */
 
 const Header = ({ title }) => {
-  //   console.log(title);
   return (
     <>
       <h1>{title}</h1>
@@ -38,7 +37,7 @@ const TotalExercises = ({ courseParts }) => {
   );
   return (
     <>
-      <strong>Total exercises : {totalExercisesCount}</strong>
+      <strong>Total of {totalExercisesCount} exercises</strong>
     </>
   );
 };
