@@ -10,7 +10,6 @@ const Header = ({ title }) => {
 };
 
 const Part = ({ partName, partExercises }) => {
-  console.log(`IN Part: ${partName}, ${partExercises}`);
   return (
     <>
       <p>
@@ -29,32 +28,27 @@ const Content = ({ courseParts }) => {
       </>
     );
   });
-  return <ul>{coursePartsList}</ul>;
+  return <>{coursePartsList}</>;
 };
 
-// const Total = (props) => {
-//   const partExercises = [
-//     props.parts[0].exercises,
-//     props.parts[1].exercises,
-//     props.parts[2].exercises,
-//   ];
-
-//   return (
-//     <>
-//       <p>
-//         Number of exercises{" "}
-//         {partExercises[0] + partExercises[1] + partExercises[2]}
-//       </p>
-//     </>
-//   );
-// };
+const TotalExercises = ({ courseParts }) => {
+  let totalExercisesCount = courseParts.reduce(
+    (sum, part) => sum + part.exercises,
+    0
+  );
+  return (
+    <>
+      <strong>Total exercises : {totalExercisesCount}</strong>
+    </>
+  );
+};
 
 const Course = ({ course }) => {
-  console.log(course);
   return (
     <>
       <Header title={course.name} />
       <Content courseParts={course.parts} />
+      <TotalExercises courseParts={course.parts} />
     </>
   );
 };
