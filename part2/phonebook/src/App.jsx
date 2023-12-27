@@ -1,19 +1,30 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ id: 1, name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    {
+      id: 1,
+      name: "Arto Hellas",
+      phoneNumber: "1234567891",
+    },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
 
   const handleNewNameInput = (event) => {
     setNewName(event.target.value);
   };
 
+  const handleNewPhoneNumberInput = (event) => {
+    setNewPhoneNumber(event.target.value);
+  };
+
   const addPersonToPhonebook = (event) => {
     event.preventDefault();
 
-    // check if the name field is empty
-    if (newName.length === 0) {
-      alert("Name cannot be blank");
+    // check if the input field is empty
+    if (newName.length === 0 || newPhoneNumber.length === 0) {
+      alert("Input fields cannot be blank");
       return;
     }
 
@@ -27,9 +38,11 @@ const App = () => {
     const newPerson = {
       id: persons.length + 1,
       name: newName,
+      phoneNumber: newPhoneNumber,
     };
     setPersons(persons.concat(newPerson));
     setNewName("");
+    setNewPhoneNumber("");
     console.log(`Successfully added ${newName}`);
   };
 
@@ -41,6 +54,10 @@ const App = () => {
           name: <input value={newName} onChange={handleNewNameInput} />
         </div>
         <div>
+          phone number:{" "}
+          <input value={newPhoneNumber} onChange={handleNewPhoneNumberInput} />
+        </div>
+        <div>
           <button type="submit" onClick={addPersonToPhonebook}>
             Add person
           </button>
@@ -48,7 +65,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <p key={person.id}>{person.name}</p>
+        <p key={person.id}>
+          {person.name}: {person.phoneNumber}
+        </p>
       ))}
     </>
   );
