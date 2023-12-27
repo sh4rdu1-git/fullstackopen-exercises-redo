@@ -10,10 +10,20 @@ const App = () => {
 
   const addPersonToPhonebook = (event) => {
     event.preventDefault();
+
+    // check if the name field is empty
     if (newName.length === 0) {
-      alert("Name cannot be blank.");
+      alert("Name cannot be blank");
       return;
     }
+
+    // check if the name is already present in the phonebook
+    let personsList = persons.map((person) => person.name);
+    if (personsList.includes(newName)) {
+      alert(`'${newName}' already exists in the phonebook`);
+      return;
+    }
+
     const newPerson = {
       id: persons.length + 1,
       name: newName,
