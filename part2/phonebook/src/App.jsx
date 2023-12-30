@@ -1,4 +1,7 @@
 import { useState } from "react";
+import SearchFilter from "./components/SearchFilter";
+import AddPersonForm from "./components/AddPersonForm";
+import NumbersListView from "./components/NumbersListView";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -20,7 +23,7 @@ const App = () => {
     setNewPhoneNumber(event.target.value);
   };
 
-  const handleSearchQueryInput = (event) => {
+  const handleSearchQueryInputChange = (event) => {
     setSearchQuery(event.target.value);
     setFilteredPersons(
       persons.filter((person) => {
@@ -31,11 +34,10 @@ const App = () => {
         );
       })
     );
-    console.log(filteredPersons);
   };
 
   const addPersonToPhonebook = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // prevent the default behaviour of form submit event
 
     // check if the input field is empty
     if (newName.length === 0 || newPhoneNumber.length === 0) {
@@ -63,40 +65,24 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
-      <div>
-        {/* to filter the phonebook by contact name */}
-        filter shown with:{" "}
-        <input value={searchQuery} onChange={handleSearchQueryInput} />
-      </div>
-      <form>
-        {/* form to add new contact details */}
-        <div>
-          name: <input value={newName} onChange={handleNewNameInput} />
-        </div>
-        <div>
-          phone number:{" "}
-          <input value={newPhoneNumber} onChange={handleNewPhoneNumberInput} />
-        </div>
-        <div>
-          <button type="submit" onClick={addPersonToPhonebook}>
-            Add person
-          </button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {searchQuery === ""
-        ? //  if the filter is blank
-          persons.map((person) => (
-            <p key={person.id}>
-              {person.name}: {person.phoneNumber}
-            </p>
-          ))
-        : // if the filter is set
-          filteredPersons.map((person) => (
-            <p key={person.id}>
-              {person.name}: {person.phoneNumber}
-            </p>
-          ))}
+      <SearchFilter
+        searchQuery={searchQuery}
+        searchQueryChangeHandler={handleSearchQueryInputChange}
+      />
+      <h3>Add new person</h3>
+      <AddPersonForm
+        personName={newName}
+        personNameInputHandler={handleNewNameInput}
+        personPhoneNumber={newPhoneNumber}
+        personPhoneNumberInputHandler={handleNewPhoneNumberInput}
+        addPersonToPhonebookHandler={addPersonToPhonebook}
+      />
+      <h3>Contacts list</h3>
+      <NumbersListView
+        searchQueryText={searchQuery}
+        allPersonsList={persons}
+        filteredPersonsList={filteredPersons}
+      />
     </>
   );
 };
