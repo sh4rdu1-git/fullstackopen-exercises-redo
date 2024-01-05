@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import SearchFilter from "./components/SearchFilter";
 import AddPersonForm from "./components/AddPersonForm";
 import NumbersListView from "./components/NumbersListView";
+import phonebookService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,8 +13,8 @@ const App = () => {
 
   // useEffect to fetch persons data from json-server
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    phonebookService.getContacts().then((initialData) => {
+      setPersons(initialData);
     });
   }, []); // keeping array empty will run this effect only once on page load
 
@@ -39,6 +39,7 @@ const App = () => {
     );
   };
 
+  // create contact functionality
   const addPersonToPhonebook = (event) => {
     event.preventDefault(); // prevent the default behaviour of form submit event
 
@@ -55,14 +56,41 @@ const App = () => {
     }
 
     const newPerson = {
-      id: persons.length + 1,
       name: newName,
       phoneNumber: newPhoneNumber,
     };
-    setPersons(persons.concat(newPerson));
+
+    // call the API service to create new contact
+    phonebookService
+      .createContact(newPerson)
+      .then((newContact) => setPersons(persons.concat(newContact)));
+
     setNewName("");
     setNewPhoneNumber("");
     console.log(`Successfully added ${newName} to the phonebook!`);
+  };
+
+  // delete contact functionality
+  const handleDeleteContact = (contactToDelete) => {
+    // confirm from user to really delete the contact
+    const confirmDelete = confirm(
+      `Are you sure you want to delete ${contactToDelete.name}?`
+    );
+
+    if (confirmDelete) {
+      // call the API service to delete a contact
+      phonebookService
+        .removeContact(contactToDelete)
+        .then(() => {
+          setPersons(persons.filter((person) => person !== contactToDelete));
+          setFilteredPersons(
+            filteredPersons.filter((person) => person !== contactToDelete)
+          );
+        })
+        .catch((error) => {
+          console.error("Error deleting contact:", error);
+        });
+    }
   };
 
   return (
@@ -85,6 +113,7 @@ const App = () => {
         searchQueryText={searchQuery}
         allPersonsList={persons}
         filteredPersonsList={filteredPersons}
+        handleDeleteContact={handleDeleteContact}
       />
     </>
   );
