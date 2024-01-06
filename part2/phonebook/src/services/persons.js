@@ -17,7 +17,7 @@ const createContact = (newContact) => {
 };
 
 const modifyContact = (contact) => {
-  const request = axios.put(`${baseURL}/${contact.id}`);
+  const request = axios.put(`${baseURL}/${contact.id}`, contact);
   return request.then((response) => {
     return response.data;
   });

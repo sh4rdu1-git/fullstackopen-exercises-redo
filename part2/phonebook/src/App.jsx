@@ -51,23 +51,57 @@ const App = () => {
 
     // check if the name is already present in the phonebook
     if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} already exists in the phonebook!`);
-      return;
-    }
+      const confirmUpdate = confirm(
+        `${newName} already exists in phonebook. Are you sure to update phone number for ${newName}?`
+      );
+      if (!confirmUpdate) {
+        return;
+      } else {
+        // find the contact, and pass it to the respective updateContact function
+        const contactToUpdate = persons.find(
+          (person) => person.name === newName
+        );
+        updateContactInPhonebook(contactToUpdate);
+      }
+    } else {
+      const newPerson = {
+        name: newName,
+        phoneNumber: newPhoneNumber,
+      };
 
-    const newPerson = {
-      name: newName,
+      // call the API service to create new contact
+      phonebookService
+        .createContact(newPerson)
+        .then((newContact) => setPersons(persons.concat(newContact)));
+
+      setNewName("");
+      setNewPhoneNumber("");
+      console.log(`Successfully added ${newName} to the phonebook!`);
+    }
+  };
+
+  // modify/update contact functionality
+  const updateContactInPhonebook = (contactToUpdate) => {
+    const newUpdatedContact = {
+      ...contactToUpdate,
       phoneNumber: newPhoneNumber,
     };
-
-    // call the API service to create new contact
+    // call the API service to update the contact
     phonebookService
-      .createContact(newPerson)
-      .then((newContact) => setPersons(persons.concat(newContact)));
-
-    setNewName("");
-    setNewPhoneNumber("");
-    console.log(`Successfully added ${newName} to the phonebook!`);
+      .modifyContact(newUpdatedContact)
+      .then((updatedContact) => {
+        setPersons(
+          persons.map((contact) =>
+            contact.id !== contactToUpdate.id ? contact : updatedContact
+          )
+        );
+        setNewName("");
+        setNewPhoneNumber("");
+        console.log(
+          `Successfully updated contact ${contactToUpdate.name} in the phonebook!`
+        );
+      })
+      .catch((error) => console.log("Error: ", error));
   };
 
   // delete contact functionality
@@ -82,9 +116,11 @@ const App = () => {
       phonebookService
         .removeContact(contactToDelete)
         .then(() => {
-          setPersons(persons.filter((person) => person !== contactToDelete));
+          setPersons(
+            persons.filter((person) => person.id !== contactToDelete.id)
+          );
           setFilteredPersons(
-            filteredPersons.filter((person) => person !== contactToDelete)
+            filteredPersons.filter((person) => person.id !== contactToDelete.id)
           );
         })
         .catch((error) => {
