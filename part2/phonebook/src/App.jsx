@@ -3,6 +3,7 @@ import SearchFilter from "./components/SearchFilter";
 import AddPersonForm from "./components/AddPersonForm";
 import NumbersListView from "./components/NumbersListView";
 import phonebookService from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,6 +11,7 @@ const App = () => {
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredPersons, setFilteredPersons] = useState(persons);
+  const [notificationDetails, setNotificationDetails] = useState(null);
 
   // useEffect to fetch persons data from json-server
   useEffect(() => {
@@ -24,6 +26,14 @@ const App = () => {
 
   const handleNewPhoneNumberInput = (event) => {
     setNewPhoneNumber(event.target.value);
+  };
+
+  // handle the notification for actions
+  const handleNotification = (notificationDetails) => {
+    setNotificationDetails(notificationDetails);
+    setTimeout(() => {
+      setNotificationDetails(null);
+    }, 5000);
   };
 
   const handleSearchQueryInputChange = (event) => {
@@ -70,13 +80,17 @@ const App = () => {
       };
 
       // call the API service to create new contact
-      phonebookService
-        .createContact(newPerson)
-        .then((newContact) => setPersons(persons.concat(newContact)));
+      phonebookService.createContact(newPerson).then((newContact) => {
+        setPersons(persons.concat(newContact));
+        const notificationObj = {
+          notificationType: "success",
+          notificationMessage: `Added ${newContact.name} to phonebook!`,
+        };
+        handleNotification(notificationObj);
+      });
 
       setNewName("");
       setNewPhoneNumber("");
-      console.log(`Successfully added ${newName} to the phonebook!`);
     }
   };
 
@@ -97,9 +111,11 @@ const App = () => {
         );
         setNewName("");
         setNewPhoneNumber("");
-        console.log(
-          `Successfully updated contact ${contactToUpdate.name} in the phonebook!`
-        );
+        const notificationObj = {
+          notificationType: "success",
+          notificationMessage: `Updated ${contactToUpdate.name} in phonebook!`,
+        };
+        handleNotification(notificationObj);
       })
       .catch((error) => console.log("Error: ", error));
   };
@@ -122,6 +138,11 @@ const App = () => {
           setFilteredPersons(
             filteredPersons.filter((person) => person.id !== contactToDelete.id)
           );
+          const notificationObj = {
+            notificationType: "success",
+            notificationMessage: `Deleted ${contactToDelete.name} from phonebook!`,
+          };
+          handleNotification(notificationObj);
         })
         .catch((error) => {
           console.error("Error deleting contact:", error);
@@ -131,6 +152,7 @@ const App = () => {
 
   return (
     <>
+      <Notification details={notificationDetails} />
       <h2>Phonebook</h2>
       <SearchFilter
         searchQuery={searchQuery}
