@@ -5,6 +5,8 @@ import NumbersListView from "./components/NumbersListView";
 import phonebookService from "./services/persons";
 import Notification from "./components/Notification";
 
+// import "./alternatestyle.css";
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -151,7 +153,7 @@ const App = () => {
   };
 
   return (
-    <>
+    <div className="container">
       <Notification details={notificationDetails} />
       <h2>Phonebook</h2>
       <SearchFilter
@@ -173,7 +175,7 @@ const App = () => {
         filteredPersonsList={filteredPersons}
         handleDeleteContact={handleDeleteContact}
       />
-    </>
+    </div>
   );
 };
 

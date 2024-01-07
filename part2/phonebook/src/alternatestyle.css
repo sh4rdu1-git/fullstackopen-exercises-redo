@@ -1,0 +1,128 @@
+/* App.jsx styles with Glassy Effect */
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: linear-gradient(
+    to right bottom,
+    #f4f5f8,
+    #e3e4e8
+  ); /* Gradient background */
+  color: #333; /* Default text color */
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Semi-transparent white background */
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Glassy box shadow */
+}
+
+h2 {
+  color: #128c7e; /* WhatsApp green for headings */
+}
+
+h3 {
+  color: #128c7e; /* WhatsApp green for subheadings */
+}
+
+form {
+  margin-top: 20px;
+}
+
+input[type="text"],
+input[type="tel"] {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px;
+  background-color: rgba(
+    244,
+    245,
+    248,
+    0.8
+  ); /* Semi-transparent WhatsApp chat input background */
+}
+
+button {
+  background-color: rgba(
+    18,
+    140,
+    126,
+    0.9
+  ); /* Semi-transparent WhatsApp green for buttons */
+  color: #fff; /* White button text color */
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgba(7, 94, 84, 0.9); /* Darker green on hover */
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Semi-transparent white background */
+  margin: 10px 0;
+  padding: 20px;
+  border: 1px solid #ddd; /* Light gray border */
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.notification {
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.notification-success {
+  background-color: rgba(
+    220,
+    248,
+    198,
+    0.9
+  ); /* Semi-transparent light green background for success notification */
+  border: 1px solid rgba(76, 175, 80, 0.9); /* Semi-transparent green border for success notification */
+  color: #128c7e; /* Dark green text color for success notification */
+}
+
+.notification-error {
+  background-color: rgba(
+    248,
+    215,
+    218,
+    0.9
+  ); /* Semi-transparent light red background for error notification */
+  border: 1px solid rgba(217, 83, 79, 0.9); /* Semi-transparent red border for error notification */
+  color: #721c24; /* Dark red text color for error notification */
+}
+
+.footer {
+  margin-top: 20px;
+  color: #6c757d; /* Gray text color for footer */
+  font-size: 14px;
+  text-align: center;
+}
