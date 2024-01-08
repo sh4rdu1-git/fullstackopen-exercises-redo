@@ -38,6 +38,11 @@ const App = () => {
     );
   };
 
+  // this is to show detailed country when "show details" button is clicked next to a filtered xcountry name
+  const showCountryDetailsHandler = (country) => {
+    setDetailedCountry(country);
+  };
+
   return (
     <div className="container">
       <div className="search">
@@ -58,7 +63,10 @@ const App = () => {
           <CountryDetails countryData={detailedCountry} />
         ) : (
           // else display list of filtered countries
-          <FilteredCountries filteredCountriesData={filteredCountries} />
+          <FilteredCountries
+            filteredCountriesData={filteredCountries}
+            onShowCountryDetails={showCountryDetailsHandler}
+          />
         )}
       </div>
     </div>
