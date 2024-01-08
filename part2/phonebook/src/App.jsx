@@ -30,7 +30,7 @@ const App = () => {
     setNewPhoneNumber(event.target.value);
   };
 
-  // handle the notification for actions
+  // handle the notification for actions success and errors
   const handleNotification = (notificationDetails) => {
     setNotificationDetails(notificationDetails);
     setTimeout(() => {
@@ -82,17 +82,26 @@ const App = () => {
       };
 
       // call the API service to create new contact
-      phonebookService.createContact(newPerson).then((newContact) => {
-        setPersons(persons.concat(newContact));
-        const notificationObj = {
-          notificationType: "success",
-          notificationMessage: `Added ${newContact.name} to phonebook!`,
-        };
-        handleNotification(notificationObj);
-      });
-
-      setNewName("");
-      setNewPhoneNumber("");
+      phonebookService
+        .createContact(newPerson)
+        .then((newContact) => {
+          setPersons(persons.concat(newContact));
+          const notificationObj = {
+            notificationType: "success",
+            notificationMessage: `Added ${newContact.name} to phonebook!`,
+          };
+          handleNotification(notificationObj);
+          setNewName("");
+          setNewPhoneNumber("");
+        })
+        .catch((error) => {
+          console.log(`Error creating new contact: ${error}`);
+          const notificationObj = {
+            notificationType: "error",
+            notificationMessage: `Error creating new contact in phonebook. ErrorMessage: ${error.message}`,
+          };
+          handleNotification(notificationObj);
+        });
     }
   };
 
@@ -119,7 +128,14 @@ const App = () => {
         };
         handleNotification(notificationObj);
       })
-      .catch((error) => console.log("Error: ", error));
+      .catch((error) => {
+        console.log("Error updating contact: ", error);
+        const notificationObj = {
+          notificationType: "error",
+          notificationMessage: `Failed to update ${contactToUpdate.name} in phonebook! ErrorMessage: ${error.message}`,
+        };
+        handleNotification(notificationObj);
+      });
   };
 
   // delete contact functionality
@@ -148,6 +164,11 @@ const App = () => {
         })
         .catch((error) => {
           console.error("Error deleting contact:", error);
+          const notificationObj = {
+            notificationType: "error",
+            notificationMessage: `Failed to delete ${contactToDelete.name} from phonebook! ErrorMessage: ${error.message}`,
+          };
+          handleNotification(notificationObj);
         });
     }
   };
