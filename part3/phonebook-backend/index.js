@@ -38,6 +38,7 @@ app.get("/api/persons", (req, res) => {
 
 // GET PERSON BY ID
 app.get("/api/persons/:id", (req, res) => {
+  console.log(`${req.method} - ${req.url}`);
   const personId = Number(req.params.id);
   const person = persons.find((p) => p.id === personId);
   if (!person) {
@@ -47,6 +48,24 @@ app.get("/api/persons/:id", (req, res) => {
     });
   }
   res.status(200).json(person);
+});
+
+// DELETE PERSON BY ID
+app.delete("/api/persons/:id", (req, res) => {
+  console.log(`${req.method} - ${req.url}`);
+  const personId = Number(req.params.id);
+  const personIndex = persons.findIndex((p) => p.id === personId);
+  if (personIndex === -1) {
+    return res.status(404).json({
+      httpStatus: 404,
+      message: "Person not found in database",
+    });
+  }
+  persons.splice(personIndex, 1);
+  res.status(200).json({
+    httpStatus: 200,
+    message: "Deleted person from database",
+  });
 });
 
 //  GET INFO FOR PHONEBOOK
