@@ -7,8 +7,22 @@ const generateId = () => {
   return Math.floor(Math.random() * 99999);
 };
 
+// Should use express.json() middleware to read JSON data from request body
+app.use(express.json());
+
 // Use the morgan logger middleware with "tiny" format
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
+
+// Use the morgan logger middleware using the custom format.
+// Note that express-json-parser middleware should be used before using this morgan logger middleware
+morgan.token("reqBody", function getReqBody(req, res) {
+  return JSON.stringify(req.body);
+});
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :reqBody"
+  )
+);
 
 let persons = [
   {
@@ -63,9 +77,6 @@ app.get("/api/info", (req, res) => {
     `<p>Phonebook has info for ${phonebookCount} people </p><p>${new Date()}</p>`
   );
 });
-
-// Should use express.json() middleware to read JSON data from request body
-app.use(express.json());
 
 // CREATE NEW PERSON ENTRY
 app.post("/api/persons", (req, res) => {
