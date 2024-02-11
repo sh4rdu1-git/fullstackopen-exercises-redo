@@ -49,7 +49,7 @@ app.get("/api/persons/:id", (req, res) => {
   if (!person) {
     return res.status(404).json({
       httpStatus: 404,
-      message: "Cannot find the requested person",
+      error: "Cannot find the requested person",
     });
   }
   res.status(200).json(person);
@@ -70,22 +70,34 @@ app.use(express.json());
 // CREATE NEW PERSON ENTRY
 app.post("/api/persons", (req, res) => {
   console.log(`${req.method} - ${req.url}`);
-  const data = req.body;
-  const isNewPerson = persons.find((p) => p.name === data.name) ? false : true;
+  const body = req.body;
 
+  if (!body.name) {
+    return res.status(400).json({
+      httpStatus: 400,
+      error: "Person name is missing",
+    });
+  }
+  if (!body.number) {
+    return res.status(400).json({
+      httpStatus: 400,
+      error: "Phone number is missing",
+    });
+  }
+
+  const isNewPerson = persons.find((p) => p.name === body.name) ? false : true;
   if (!isNewPerson) {
-    return res.status(200).json({
-      httpStatus: 200,
-      message: "Person with same name already exists",
+    return res.status(400).json({
+      httpStatus: 400,
+      error: "Person name must be unique",
     });
   }
 
   const newPerson = {
     id: generateId(),
-    name: data.name,
-    number: data.number,
+    name: body.name,
+    number: body.number,
   };
-
   persons.push(newPerson);
   res.status(201).json(newPerson);
 });
@@ -98,7 +110,7 @@ app.delete("/api/persons/:id", (req, res) => {
   if (personIndex === -1) {
     return res.status(404).json({
       httpStatus: 404,
-      message: "Person not found in database",
+      error: "Person not found in database",
     });
   }
   persons.splice(personIndex, 1);
