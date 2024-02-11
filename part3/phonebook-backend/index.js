@@ -1,10 +1,14 @@
 const express = require("express");
+const morgan = require("morgan");
 
 const app = express();
 
 const generateId = () => {
   return Math.floor(Math.random() * 99999);
 };
+
+// Use the morgan logger middleware with "tiny" format
+app.use(morgan("tiny"));
 
 let persons = [
   {
@@ -31,19 +35,16 @@ let persons = [
 
 // LANDING PAGE / ROOT PATH
 app.get("/", (req, res) => {
-  console.log(`${req.method} - ${req.url}`);
   res.send("<p>Welcome to Phonebook!</p>");
 });
 
 // GET ALL PERSONS
 app.get("/api/persons", (req, res) => {
-  console.log(`${req.method} - ${req.url}`);
   res.status(200).json(persons);
 });
 
 // GET PERSON BY ID
 app.get("/api/persons/:id", (req, res) => {
-  console.log(`${req.method} - ${req.url}`);
   const personId = Number(req.params.id);
   const person = persons.find((p) => p.id === personId);
   if (!person) {
@@ -57,7 +58,6 @@ app.get("/api/persons/:id", (req, res) => {
 
 //  GET INFO FOR PHONEBOOK
 app.get("/api/info", (req, res) => {
-  console.log(`${req.method} - ${req.url}`);
   const phonebookCount = persons.length;
   res.send(
     `<p>Phonebook has info for ${phonebookCount} people </p><p>${new Date()}</p>`
@@ -69,7 +69,6 @@ app.use(express.json());
 
 // CREATE NEW PERSON ENTRY
 app.post("/api/persons", (req, res) => {
-  console.log(`${req.method} - ${req.url}`);
   const body = req.body;
 
   if (!body.name) {
@@ -104,7 +103,6 @@ app.post("/api/persons", (req, res) => {
 
 // DELETE PERSON BY ID
 app.delete("/api/persons/:id", (req, res) => {
-  console.log(`${req.method} - ${req.url}`);
   const personId = Number(req.params.id);
   const personIndex = persons.findIndex((p) => p.id === personId);
   if (personIndex === -1) {
