@@ -1,7 +1,17 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const app = express();
+
+// The dist directory contains the FRONTEND build of the application.
+// copied from frontend project directory
+// To make express show static content, the page index.html and the JavaScript, etc.,
+// it fetches, we need a built-in middleware from Express called static.
+app.use(express.static("dist"));
+
+// CORS
+app.use(cors());
 
 const generateId = () => {
   return Math.floor(Math.random() * 99999);
@@ -28,22 +38,22 @@ let persons = [
   {
     id: 1,
     name: "Arto Hellas",
-    number: "040-123456",
+    phoneNumber: "040-123456",
   },
   {
     id: 2,
     name: "Ada Lovelace",
-    number: "39-44-5323523",
+    phoneNumber: "39-44-5323523",
   },
   {
     id: 3,
     name: "Dan Abramov",
-    number: "12-43-234345",
+    phoneNumber: "12-43-234345",
   },
   {
     id: 4,
     name: "Mary Poppendieck",
-    number: "39-23-6423122",
+    phoneNumber: "39-23-6423122",
   },
 ];
 
@@ -88,7 +98,7 @@ app.post("/api/persons", (req, res) => {
       error: "Person name is missing",
     });
   }
-  if (!body.number) {
+  if (!body.phoneNumber) {
     return res.status(400).json({
       httpStatus: 400,
       error: "Phone number is missing",
@@ -106,7 +116,7 @@ app.post("/api/persons", (req, res) => {
   const newPerson = {
     id: generateId(),
     name: body.name,
-    number: body.number,
+    phoneNumber: body.phoneNumber,
   };
   persons.push(newPerson);
   res.status(201).json(newPerson);
@@ -129,7 +139,7 @@ app.delete("/api/persons/:id", (req, res) => {
   });
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} since ${new Date()}`);
 });
