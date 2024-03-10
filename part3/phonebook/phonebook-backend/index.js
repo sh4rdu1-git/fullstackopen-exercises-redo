@@ -1,8 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-
 const app = express();
+const Person = require("./models/person");
 
 // The dist directory contains the FRONTEND build of the application.
 // copied from frontend project directory
@@ -13,15 +14,8 @@ app.use(express.static("dist"));
 // CORS
 app.use(cors());
 
-const generateId = () => {
-  return Math.floor(Math.random() * 99999);
-};
-
 // Should use express.json() middleware to read JSON data from request body
 app.use(express.json());
-
-// Use the morgan logger middleware with "tiny" format
-// app.use(morgan("tiny"));
 
 // Use the morgan logger middleware using the custom format.
 // Note that express-json-parser middleware should be used before using this morgan logger middleware
@@ -34,29 +28,6 @@ app.use(
   )
 );
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    phoneNumber: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    phoneNumber: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    phoneNumber: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    phoneNumber: "39-23-6423122",
-  },
-];
-
 // LANDING PAGE / ROOT PATH
 app.get("/", (req, res) => {
   res.send("<p>Welcome to Phonebook!</p>");
@@ -64,82 +35,170 @@ app.get("/", (req, res) => {
 
 // GET ALL PERSONS
 app.get("/api/persons", (req, res) => {
-  res.status(200).json(persons);
+  // res.status(200).json(persons);
+  Person.find({})
+    .then((persons) => {
+      res.status(200).json(persons);
+    })
+    .catch((error) => {
+      console.error(
+        `Error while getting data for all people from database: ${error.message}`
+      );
+      res.status(500).json({
+        httpStatus: 500,
+        error: "Internal server error",
+      });
+    });
 });
 
 // GET PERSON BY ID
 app.get("/api/persons/:id", (req, res) => {
-  const personId = Number(req.params.id);
-  const person = persons.find((p) => p.id === personId);
-  if (!person) {
-    return res.status(404).json({
-      httpStatus: 404,
-      error: "Cannot find the requested person",
+  const personId = req.params.id;
+
+  Person.findById(personId)
+    .then((person) => {
+      if (!person) {
+        res.status(404).json({
+          httpStatus: 404,
+          error: "Cannot find the requested person",
+        });
+      } else {
+        res.status(200).json(person);
+      }
+    })
+    .catch((error) => {
+      console.error(
+        `Error while finding person by id from database: ${error.message}`
+      );
+      res.status(500).json({
+        httpStatus: 500,
+        error: "Internal server error",
+      });
     });
-  }
-  res.status(200).json(person);
 });
 
 //  GET INFO FOR PHONEBOOK
 app.get("/api/info", (req, res) => {
-  const phonebookCount = persons.length;
-  res.send(
-    `<p>Phonebook has info for ${phonebookCount} people </p><p>${new Date()}</p>`
-  );
+  Person.countDocuments({})
+    .then((count) => {
+      res.send(
+        `<p>Phonebook has info for ${count} people </p>
+      <p>${new Date()}</p>`
+      );
+    })
+    .catch((error) => {
+      console.error(
+        `Error while counting number of people in phonebook from database: ${error.message}`
+      );
+      res.status(500).json({
+        httpStatus: 500,
+        error: "Internal server error",
+      });
+    });
 });
 
 // CREATE NEW PERSON ENTRY
 app.post("/api/persons", (req, res) => {
   const body = req.body;
 
-  if (!body.name) {
+  if (!body.name || !body.phoneNumber) {
     return res.status(400).json({
       httpStatus: 400,
-      error: "Person name is missing",
-    });
-  }
-  if (!body.phoneNumber) {
-    return res.status(400).json({
-      httpStatus: 400,
-      error: "Phone number is missing",
+      error: "Person name or phone number is missing",
     });
   }
 
-  const isNewPerson = persons.find((p) => p.name === body.name) ? false : true;
-  if (!isNewPerson) {
-    return res.status(400).json({
-      httpStatus: 400,
-      error: "Person name must be unique",
-    });
-  }
-
-  const newPerson = {
-    id: generateId(),
+  // create new person object
+  const newPerson = new Person({
     name: body.name,
     phoneNumber: body.phoneNumber,
-  };
-  persons.push(newPerson);
-  res.status(201).json(newPerson);
+  });
+
+  newPerson
+    .save()
+    .then((savedPerson) => {
+      res.status(201).json(savedPerson);
+    })
+    .catch((error) => {
+      console.error(`Error while saving person to database: ${error.message}`);
+      res.status(500).json({
+        httpStatus: 500,
+        error: "Internal server error",
+      });
+    });
+});
+
+// UPDATE PERSON  by id
+app.put("/api/persons/:id", (req, res) => {
+  const personId = req.params.id;
+  const updateData = req.body;
+
+  Person.findByIdAndUpdate(personId, updateData, { new: true })
+    .then((updatedPerson) => {
+      if (!updatedPerson) {
+        return res.status(404).json({
+          httpStatus: 404,
+          error: "Person not found in database",
+        });
+      } else {
+        res.status(200).json(updatedPerson);
+      }
+    })
+    .catch((error) => {
+      console.error(
+        `Error while updating person in database: ${error.message}`
+      );
+      res.status(500).json({
+        httpStatus: 500,
+        error: "Internal server error",
+      });
+    });
 });
 
 // DELETE PERSON BY ID
 app.delete("/api/persons/:id", (req, res) => {
-  const personId = Number(req.params.id);
-  const personIndex = persons.findIndex((p) => p.id === personId);
-  if (personIndex === -1) {
-    return res.status(404).json({
-      httpStatus: 404,
-      error: "Person not found in database",
+  const personId = req.params.id;
+
+  Person.findById(personId)
+    .then((existingPerson) => {
+      // if the person does not exist in database
+      if (!existingPerson) {
+        return res.status(404).json({
+          httpStatus: 404,
+          error: "Person not found in database",
+        });
+      } else {
+        // if person exists in database
+        Person.findByIdAndDelete(personId)
+          .then((data) => {
+            res.status(200).json({
+              httpStatus: 200,
+              message: "Deleted person from database",
+            });
+          })
+          .catch((error) => {
+            console.error(
+              `Error while deleting person from database: ${error.message}`
+            );
+            res.status(500).json({
+              httpStatus: 500,
+              error: "Internal server error",
+            });
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(
+        `Error while cbecking person existence in database: ${error.message}`
+      );
+      res.status(500).json({
+        httpStatus: 500,
+        error: "Internal server error",
+      });
     });
-  }
-  persons.splice(personIndex, 1);
-  res.status(200).json({
-    httpStatus: 200,
-    message: "Deleted person from database",
-  });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} since ${new Date()}`);
 });
