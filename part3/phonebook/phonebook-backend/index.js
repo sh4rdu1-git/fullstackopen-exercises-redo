@@ -34,25 +34,19 @@ app.get("/", (req, res) => {
 });
 
 // GET ALL PERSONS
-app.get("/api/persons", (req, res) => {
+app.get("/api/persons", (req, res, next) => {
   // res.status(200).json(persons);
   Person.find({})
     .then((persons) => {
       res.status(200).json(persons);
     })
     .catch((error) => {
-      console.error(
-        `Error while getting data for all people from database: ${error.message}`
-      );
-      res.status(500).json({
-        httpStatus: 500,
-        error: "Internal server error",
-      });
+      next(error);
     });
 });
 
 // GET PERSON BY ID
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
   const personId = req.params.id;
 
   Person.findById(personId)
@@ -67,18 +61,12 @@ app.get("/api/persons/:id", (req, res) => {
       }
     })
     .catch((error) => {
-      console.error(
-        `Error while finding person by id from database: ${error.message}`
-      );
-      res.status(500).json({
-        httpStatus: 500,
-        error: "Internal server error",
-      });
+      next(error);
     });
 });
 
 //  GET INFO FOR PHONEBOOK
-app.get("/api/info", (req, res) => {
+app.get("/api/info", (req, res, next) => {
   Person.countDocuments({})
     .then((count) => {
       res.send(
@@ -87,18 +75,12 @@ app.get("/api/info", (req, res) => {
       );
     })
     .catch((error) => {
-      console.error(
-        `Error while counting number of people in phonebook from database: ${error.message}`
-      );
-      res.status(500).json({
-        httpStatus: 500,
-        error: "Internal server error",
-      });
+      next(error);
     });
 });
 
 // CREATE NEW PERSON ENTRY
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
 
   if (!body.name || !body.phoneNumber) {
@@ -120,16 +102,12 @@ app.post("/api/persons", (req, res) => {
       res.status(201).json(savedPerson);
     })
     .catch((error) => {
-      console.error(`Error while saving person to database: ${error.message}`);
-      res.status(500).json({
-        httpStatus: 500,
-        error: "Internal server error",
-      });
+      next(error);
     });
 });
 
 // UPDATE PERSON  by id
-app.put("/api/persons/:id", (req, res) => {
+app.put("/api/persons/:id", (req, res, next) => {
   const personId = req.params.id;
   const updateData = req.body;
 
@@ -145,18 +123,12 @@ app.put("/api/persons/:id", (req, res) => {
       }
     })
     .catch((error) => {
-      console.error(
-        `Error while updating person in database: ${error.message}`
-      );
-      res.status(500).json({
-        httpStatus: 500,
-        error: "Internal server error",
-      });
+      next(error);
     });
 });
 
 // DELETE PERSON BY ID
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
   const personId = req.params.id;
 
   Person.findById(personId)
@@ -177,26 +149,38 @@ app.delete("/api/persons/:id", (req, res) => {
             });
           })
           .catch((error) => {
-            console.error(
-              `Error while deleting person from database: ${error.message}`
-            );
-            res.status(500).json({
-              httpStatus: 500,
-              error: "Internal server error",
-            });
+            next(error);
           });
       }
     })
     .catch((error) => {
-      console.error(
-        `Error while cbecking person existence in database: ${error.message}`
-      );
-      res.status(500).json({
-        httpStatus: 500,
-        error: "Internal server error",
-      });
+      next(error);
     });
 });
+
+// Middleware for handling unknown endpoints
+const unknownEndpointHandler = (req, res) => {
+  res.status(404).send({
+    httpStatus: 404,
+    error: "Unknown endpoint",
+  });
+};
+app.use(unknownEndpointHandler);
+
+// Error handler middleware
+const errorHandler = (error, req, res, next) => {
+  console.error(`ERROR: ${error.name}: ${error.message}`);
+
+  if (error.name === "CastError") {
+    return res.status(400).send({
+      httpStatus: 400,
+      error: "Malformatted ID",
+    });
+  }
+
+  next(error);
+};
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
