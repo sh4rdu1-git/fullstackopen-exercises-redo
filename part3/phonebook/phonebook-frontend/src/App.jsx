@@ -95,10 +95,12 @@ const App = () => {
           setNewPhoneNumber("");
         })
         .catch((error) => {
-          console.log(`Error creating new contact: ${error}`);
+          console.error(
+            `Error creating new contact: ${error.response.data.error}`
+          );
           const notificationObj = {
             notificationType: "error",
-            notificationMessage: `Error creating new contact in phonebook. ErrorMessage: ${error.message}`,
+            notificationMessage: `Error creating new contact in phonebook. ErrorMessage: ${error.response.data.error}`,
           };
           handleNotification(notificationObj);
         });

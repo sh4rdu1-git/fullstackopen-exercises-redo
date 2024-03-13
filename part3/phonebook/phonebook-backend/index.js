@@ -111,7 +111,18 @@ app.put("/api/persons/:id", (req, res, next) => {
   const personId = req.params.id;
   const updateData = req.body;
 
-  Person.findByIdAndUpdate(personId, updateData, { new: true })
+  if (!updateData.name || !updateData.phoneNumber) {
+    return res.status(400).json({
+      httpStatus: 400,
+      error: "Person name or phone number is missing",
+    });
+  }
+
+  Person.findByIdAndUpdate(personId, updateData, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
     .then((updatedPerson) => {
       if (!updatedPerson) {
         return res.status(404).json({
@@ -175,6 +186,11 @@ const errorHandler = (error, req, res, next) => {
     return res.status(400).send({
       httpStatus: 400,
       error: "Malformatted ID",
+    });
+  } else if (error.name === "ValidationError") {
+    return res.status(400).send({
+      httpStatus: 400,
+      error: error.message,
     });
   }
 
