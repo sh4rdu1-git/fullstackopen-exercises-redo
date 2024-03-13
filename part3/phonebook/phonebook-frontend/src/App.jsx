@@ -131,10 +131,10 @@ const App = () => {
         handleNotification(notificationObj);
       })
       .catch((error) => {
-        console.log("Error updating contact: ", error);
+        console.error(`Error updating contact: ${error.response.data.error}`);
         const notificationObj = {
           notificationType: "error",
-          notificationMessage: `Failed to update ${contactToUpdate.name} in phonebook! ErrorMessage: ${error.message}`,
+          notificationMessage: `Failed to update ${contactToUpdate.name} in phonebook! ErrorMessage: ${error.response.data.error}`,
         };
         handleNotification(notificationObj);
       });
