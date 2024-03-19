@@ -6,7 +6,7 @@ const requestLogger = () => {
     return JSON.stringify(req.body)
   })
 
-  return morgan(':method - :url - HTTPStatus=:status - Response-size=:res[content-length] - Response-time=:response-time ms - ClientIP=:remote-addr - Referrer=referrer - ReqBody=:reqBody')
+  return morgan(':method - :url - HTTPStatus=:status - Response-size=:res[content-length] - Response-time=:response-time ms - ClientIP=:remote-addr - Referrer=:referrer - ReqBody=:reqBody')
 }
 
 

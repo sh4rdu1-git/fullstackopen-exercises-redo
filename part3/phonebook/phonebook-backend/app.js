@@ -29,7 +29,7 @@ app.use(express.static('dist'))
 app.use(express.json())
 
 // Request Logger middleware
-app.use(middleware.requestLogger)
+app.use(middleware.requestLogger())
 
 // API router
 app.use('/api/persons', personRouter)
