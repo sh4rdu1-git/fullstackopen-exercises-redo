@@ -29,17 +29,17 @@ app.use(express.static('dist'))
 app.use(express.json())
 
 // Request Logger middleware
-app.use(middleware.requestLogger())
+app.use(middleware.requestLogger)
 
 // API router
 app.use('/api/persons', personRouter)
 
 // Unknown endpoint handler middleware
-app.use(middleware.unknownEndpoint())
+app.use(middleware.unknownEndpoint)
 
 // Error handler middleware
 // This middleware should be always loaded at the last
 // All routes should be defined before loading this middleware
-app.use(middleware.errorHandler())
+app.use(middleware.errorHandler)
 
 module.exports = app
