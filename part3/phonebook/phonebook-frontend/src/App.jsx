@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
+import Notification from "./components/NotificationComponent/Notification";
+import Header from "./components/HeaderComponent/Header";
 import SearchFilter from "./components/SearchFilter";
-import AddPersonForm from "./components/AddPersonForm";
+import AddPersonForm from "./components/AddPersonComponent/AddPersonForm";
 import NumbersListView from "./components/NumbersListView";
-import phonebookService from "./services/persons";
-import Notification from "./components/Notification";
 
+import phonebookService from "./services/persons";
+
+import "./App.css";
 // import "./alternatestyle.css";
+
+// REFACTORING TEST
+// import NewAddPerson from "./components/NewAddPersonComponent/NewAddPerson";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -176,29 +182,42 @@ const App = () => {
   };
 
   return (
-    <div className="container">
+    <>
       <Notification details={notificationDetails} />
-      <h2>Phonebook</h2>
-      <SearchFilter
-        searchQuery={searchQuery}
-        searchQueryChangeHandler={handleSearchQueryInputChange}
-      />
-      <h3>Add new person</h3>
-      <AddPersonForm
-        personName={newName}
-        personNameInputHandler={handleNewNameInput}
-        personPhoneNumber={newPhoneNumber}
-        personPhoneNumberInputHandler={handleNewPhoneNumberInput}
-        addPersonToPhonebookHandler={addPersonToPhonebook}
-      />
-      <h3>Contacts list</h3>
-      <NumbersListView
-        searchQueryText={searchQuery}
-        allPersonsList={persons}
-        filteredPersonsList={filteredPersons}
-        handleDeleteContact={handleDeleteContact}
-      />
-    </div>
+      <header>
+        <Header />
+      </header>
+      <main className="main-section">
+        <section className="section__addperson">
+          <div className="container column">
+            <h3>Add new person</h3>
+            <AddPersonForm
+              personName={newName}
+              personNameInputHandler={handleNewNameInput}
+              personPhoneNumber={newPhoneNumber}
+              personPhoneNumberInputHandler={handleNewPhoneNumberInput}
+              addPersonToPhonebookHandler={addPersonToPhonebook}
+            />
+          </div>
+        </section>
+        <section className="section__contactslist">
+          <div className="container column">
+            <h3>Contacts list</h3>
+            <SearchFilter
+              searchQuery={searchQuery}
+              searchQueryChangeHandler={handleSearchQueryInputChange}
+            />
+            <NumbersListView
+              searchQueryText={searchQuery}
+              allPersonsList={persons}
+              filteredPersonsList={filteredPersons}
+              handleDeleteContact={handleDeleteContact}
+            />
+          </div>
+        </section>
+        {/* <NewAddPerson /> */}
+      </main>
+    </>
   );
 };
 

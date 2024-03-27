@@ -1,0 +1,32 @@
+.header {
+  background-color: #000000;
+  color: #fca311;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 2.5rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+}
+
+.btn__btnlink {
+  padding: 0.5em 1.25em;
+  text-decoration: none;
+  background-color: #fca311;
+  color: #000000;
+  border: 1px solid #fca311;
+  border-radius: 0.3em;
+  text-align: center;
+}
+
+@media screen and (max-width: 850px) {
+  .header .row {
+    flex-direction: column;
+  }
+
+  .header .row :first-child {
+    margin-bottom: 0.5em;
+  }
+}

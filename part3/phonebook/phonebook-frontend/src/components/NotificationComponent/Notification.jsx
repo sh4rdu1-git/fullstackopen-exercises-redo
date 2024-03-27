@@ -1,5 +1,7 @@
 /* eslint react/prop-types: 0 */
 
+import "./Notification.css";
+
 const Notification = ({ details }) => {
   if (details === null) return;
 

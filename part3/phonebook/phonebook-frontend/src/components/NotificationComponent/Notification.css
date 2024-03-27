@@ -1,0 +1,27 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.notification {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.notification-success {
+  border: 1px solid #28a745; /* Border color for success */
+  background-color: #d4edda; /* Background color for success */
+  color: #155724; /* Text color for success */
+}
+
+.notification-error {
+  border: 1px solid #dc3545; /* Border color for error */
+  background-color: #f8d7da; /* Background color for error */
+  color: #721c24; /* Text color for error */
+}
