@@ -1,0 +1,19 @@
+.form-inputs-layout {
+  display: flex;
+  flex-direction: row;
+}
+
+.info-section {
+  width: 40%;
+}
+
+@media screen and (max-width: 850px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .form-section,
+  .info-section {
+    width: 100%;
+  }
+}

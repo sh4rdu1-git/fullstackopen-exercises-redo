@@ -1,8 +1,9 @@
 .section__addperson {
-  background-color: #14213d;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
 }
 
-.section__contactslist {
-  background-color: #fca311;
+.section__personslist {
+  background-color: #14213d;
+  color: #fff;
 }

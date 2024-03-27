@@ -12,7 +12,7 @@ const Header = () => {
             {" "}
             <a
               href="https://github.com/sh4rdu1-git/fullstackopen-exercises-redo/tree/main/part3/phonebook"
-              className="btn__btnlink"
+              className="btn btn-link"
               target="_blank"
               rel="noreferrer"
             >

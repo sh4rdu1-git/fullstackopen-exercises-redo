@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Notification from "./components/NotificationComponent/Notification";
 import Header from "./components/HeaderComponent/Header";
-import SearchFilter from "./components/SearchFilter";
+import SearchFilter from "./components/SearchFilterComponent/SearchFilter";
 import AddPersonForm from "./components/AddPersonComponent/AddPersonForm";
-import NumbersListView from "./components/NumbersListView";
+import PersonsList from "./components/PersonsListComponent/PersonsList";
 
 import phonebookService from "./services/persons";
 
@@ -200,14 +200,14 @@ const App = () => {
             />
           </div>
         </section>
-        <section className="section__contactslist">
+        <section className="section__personslist">
           <div className="container column">
-            <h3>Contacts list</h3>
+            <h3>Persons list</h3>
             <SearchFilter
               searchQuery={searchQuery}
               searchQueryChangeHandler={handleSearchQueryInputChange}
             />
-            <NumbersListView
+            <PersonsList
               searchQueryText={searchQuery}
               allPersonsList={persons}
               filteredPersonsList={filteredPersons}

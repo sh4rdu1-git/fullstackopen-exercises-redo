@@ -1,14 +1,16 @@
 /* eslint react/prop-types: 0 */
-import Person from "./Person";
+import Person from "./PersonComponent/Person";
 
-const NumbersListView = ({
+import "./PersonsList.css";
+
+const PersonsList = ({
   searchQueryText,
   allPersonsList,
   filteredPersonsList,
   handleDeleteContact,
 }) => {
   return (
-    <div>
+    <div className="list__persons">
       {searchQueryText === ""
         ? //  if the filter is blank
           allPersonsList.map((person) => (
@@ -32,4 +34,4 @@ const NumbersListView = ({
   );
 };
 
-export default NumbersListView;
+export default PersonsList;

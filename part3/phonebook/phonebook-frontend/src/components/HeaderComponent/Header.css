@@ -11,13 +11,13 @@
   letter-spacing: 0.25em;
 }
 
-.btn__btnlink {
-  padding: 0.5em 1.25em;
+.btn-link {
+  /* padding: 0.5em 1.25em; */
   text-decoration: none;
-  background-color: #fca311;
-  color: #000000;
+  background-color: #fca311 !important;
+  color: #000000 !important;
   border: 1px solid #fca311;
-  border-radius: 0.3em;
+  border-radius: 1em;
   text-align: center;
 }
 
