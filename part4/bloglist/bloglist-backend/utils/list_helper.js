@@ -17,4 +17,22 @@ const totalLikes = (blogs) => {
   return likesArray.reduce(reducer, 0)
 }
 
-module.exports = { dummy, totalLikes }
+const favouriteBlog = (blogs) => {
+  let maxLikes = 0
+  let favouriteBlog = null
+
+  blogs.map(blog => {
+    if (blog.likes > maxLikes){
+      maxLikes = blog.likes
+      favouriteBlog = {
+        title: blog.title,
+        author: blog.author,
+        likes: blog.likes
+      }
+    }
+  })
+
+  return favouriteBlog
+}
+
+module.exports = { dummy, totalLikes, favouriteBlog }
